@@ -1,0 +1,20 @@
+build:
+  test:
+    image: fdplugins/android
+    commands:
+      - framgia-ci test
+      - framgia-ci report
+      - framgia-ci finish
+    when:
+      event: pull_request
+  publish:  // Build Debug APK and Upload to crashlytics when merged pull request
+    image: fdplugins/android
+    commands:
+      - gradle :app:assembleDebug :app:crashlyticsUploadDistributionDebug 
+    when:
+      branch: master
+      event: push
+
+cache:
+  mount:
+    - .git
