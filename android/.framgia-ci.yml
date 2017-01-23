@@ -1,22 +1,12 @@
 project_type: android
 test:
   build:
-    enable: true
-    ignore: false
     command: gradle :app:assembleDebug
   checkstyle:
-    enable: true
-    ignore: false
     command: gradle :app:checkstyle
   findbugs:
-    enable: true
-    ignore: false
     command: gradle :app:findbugs
   pmd:
-    enable: true
-    ignore: false
     command: gradle :app:pmd
   androidlint:
-    enable: true
-    ignore: false
     command: gradle :app:lintDebug

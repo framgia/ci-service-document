@@ -42,7 +42,7 @@ Kết thúc là quá trình cache lại thư mục `.git` và `/drone/.bundle` �
     - Bạn nên sử dụng chức năng cache để việc cài đặt `bundle`, `npm`, `composer` diễn ra được nhanh hơn.
     - Ở phiên bản hiện tại của Drone, một Pull Request chỉ có thể restore cache từ bản cache của defaul branch. Vấn đề này sẽ được khắc phục khi Framgia Drone được nâng cấp lên bản mới.
 
-- Bạn có thể tham khảo thêm về config ví dụ cho project php [ở đây](./php/) hay ví dụ cho project rails [ở đây](./ruby).
+- Bạn có thể tham khảo thêm về config ví dụ cho project PHP [ở đây](./php/), ví dụ cho project Ruby [ở đây](./ruby), hay ví dụ cho project Android [ở đây](./android).
 
 ## Framgia CI Report Service
 - URL: http://ci-reports.framgia.vn/
@@ -51,7 +51,7 @@ Kết thúc là quá trình cache lại thư mục `.git` và `/drone/.bundle` �
     - Ruby: `bundle-audit`, `rspec` with code coverage, `brakeman`, `reek`, `rubocop`, `rails_best_practices`
     - PHP: `phpcpd` (PHP Copy/Paste Detector), `phpmd` (PHP Mess Detector), `pdepend` (PHP Depend), `phpmetrics`, `phpcs` (PHP CodeSniffer), `phpunit` with Code Coverage
     - Android: `android-lint`, `checkstyle`, `findbugs`, `pmd`)
-Ngoài ra còn support hiển thị Javascript & CSS (`eslint`, `scss-lint`) cho các project PHP và Ruby.
+    - Ngoài ra còn support hiển thị Javascript & CSS (`eslint`, `scss-lint`) cho các project PHP và Ruby.
 - Framgia CI Report cũng có các tính năng về notification lên Chatwork hay qua Email. Bạn cần có quyền admin với GitHub Repository để có thể chỉnh sửa các setting này trên Framgia CI Report Service.
 - Để nhận thông báo về các bản build qua **Chatwork**, bạn có thể sử dụng Chatwork Bot của riêng mình, hoặc sử dụng bot mặc định mà Framgia CI cung cấp. Hãy add contact với [Framgia CI Bot](https://www.chatwork.com/framgia-ci-bot) rồi add nó vào box Chatwork mà bạn mong muốn nhận message, và Framgia CI Service sẽ thực hiện các công việc còn lại cho bạn.
 
@@ -68,4 +68,3 @@ framgia-ci init android
 
 ## Framgia GitHub Comment service
 - Hệ thống Framgia GitHub Comment sẽ tự động được chạy sau khi Framgia CI Report Service hoàn thành việc copy các file reports từ Framgia Drone. Bạn hoàn toàn không cần thực hiện bất kỳ config nào cho việc này.
-
