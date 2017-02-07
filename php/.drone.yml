@@ -1,8 +1,9 @@
 build:
   image: framgia/laravel-workspace
   commands:
-    - cp .env.testing.example .env
+    - cp .env.example .env
     - composer install
+    - php artisan key:generate
     - npm install
     - gulp
     - framgia-ci test-connect 127.0.0.1 3306 60
@@ -10,10 +11,12 @@ build:
 compose:
   database:
     image: mysql
+    expose:
+      - "3306"
     environment:
-      MYSQL_DATABASE: homestead_test
-      MYSQL_USER: homestead_test
-      MYSQL_PASSWORD: secret
+      MYSQL_DATABASE: demo_db
+      MYSQL_USER: demo_user
+      MYSQL_PASSWORD: demo_pw
       MYSQL_ROOT_PASSWORD: root
 deploy:
   rocketeer:
