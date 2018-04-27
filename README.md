@@ -1,21 +1,22 @@
 # Framgia CI Service Document
 
+The Vietnamese version of this document can be found [here](./README.vn.md)
+
 ## Framgia CI Service
-**Framgia CI Service** bao gồm 4 dịch vụ chính, đó là:
-- **Framgia Drone Service**: Là công cụ CI/CD open source, được viết bằng Golang, hoạt động dựa vào Docker.
-Framgia Drone sử dụng phiên bản Drone stable là **0.4.2**. Về document của Drone, bạn có thể tham khảo ở [đây](http://readme.drone.io/)
-- **Framgia CI Report Service**: Là hệ thống do Framgia phát triển, dùng để lưu và hiển thị test reports, cũng như theo dõi tình trạng các bản build.
-- **Framgia CI CLI**: Một Command Line Interface được viết bằng python, có nhiệm vụ gọi các API của hệ thống Framgia CI Report,
-cũng như để chạy các câu lệnh trong bản build được dễ dàng hơn. Cách thức cài đặt cũng như hướng dẫn về Framgia CI CLI có thể xem ở https://github.com/framgia/ci-report-tool/
-- **Framgia GitHub Comment Service**: Là hệ thống phân tích reports và gửi comment lên Github. Chỉ hoạt động khi sử dụng cùng hệ thồng Framgia CI Report.
-(Đương nhiên rồi, bạn cần phải có reports thì mới gửi được comment lên GitHub chứ :smile:)
+**Framgia CI Service** contains 4 main services. They are:
+- **Framgia Drone Service**: It is an open-source for running CI/CD service, written in Golang, powered by Docker.
+Framgia Drone is using Drone version **0.4.2**. More documentation about Drone can be found [here](http://readme.drone.io/0.4/)
+- **Framgia CI Report Service**: It is a service built by Framgia, used for storing and displaying test reports. It also helps users and administrators to track the build status more easily.
+- **Framgia CI CLI**: It is a Command Line Interface written in python, used for calling Framgia CI Report Service's APIs. It is also used for running build's commands more easily and flexibly. For the installation and usage of Framgia CI CLI, you can refer its own repository https://github.com/framgia/ci-report-tool/
+- **Framgia GitHub Comment Service**: It is the service that analyzes the reports and sends comments to Github. It only works with Framgia CI Report Service.
+(Of course, you have to store the reports, to be able to send comments to Github :smile:)
 
 ## Framgia Drone Service
 - URL: http://ci.framgia.vn/
-- Requirement: Bạn cần liên hện với Admin để tạo tài khoản trên http://ci.framgia.vn/ . Ngoài ra, bạn cần có quyền admin với **Repository** trên GitHub để có thể active được repository đó.
-- Framgia Drone Service có thể chạy độc lập mà không cần đến 3 thành phần còn lại. Tuy nhiên trong trường hợp đó, bạn chỉ có thể xác định được trạng thái của bản build trên GitHub. Nếu bạn muốn lưu trữ và xem kỹ report của từng bản build của mình, bạn cần sử dụng đến các công cụ khác trong hệ thống **Framgia CI Service**
-- Sau khi active project trên Framgia Drone, bạn cần có một file config để báo cho Drone biết nó phải làm những gì. File này có tên `.drone.yml`, được viết bằng cú pháp `yaml`. Bạn có thể tìm hiểu kỹ hơn ở trang [document](http://readme.drone.io/0.4) của Drone. <br>
-Ví dụ về file config cho một project Rails:
+- Requirement: You have to contact the Administrators, then they will create an account for you in http://ci.framgia.vn/ . Moreover, you must have the **administration** role in the **Repository** to be able to activate it in Drone Service.
+- Framgia Drone Service can run independently with the other 3 parts. However, by only using the Drone Service, you can only check the build status in Github. If you want to store and check the test reports of each build, you have to use the other tools of **Framgia CI Service**
+- After activate the project in Framgia Drone, you have to create a configuration file, to tell Drone what it has to do to make the build. This file is named `.drone.yml`, written in `yaml` syntax. You can find more information in Drone's  [document](http://readme.drone.io/0.4).<br>
+An example of configuration file for Rails project
 ```
 build:
   image: framgia/ruby-workspace-ci
@@ -29,42 +30,42 @@ cache:
     - /drone/.bundle
 ```
 
-Có thể thấy project này được build trên image Docker có tên là `framgia/ruby-workspace-ci`. Nội dung của image này các bạn có thể xem ở **Docker Hub** tại địa chỉ https://hub.docker.com/r/framgia/ruby-workspace-ci/
+As you can see, the project above will be built inside the Docker container that is created from `framgia/ruby-workspace-ci` docker image. The contains of this image you can check in **Docker Hub** with the URL https://hub.docker.com/r/framgia/ruby-workspace-ci/
 
-Về nội dung của phần config thì bao gồm 2 phần, phần `build` và phần `cache`. Phần build làm công việc đó là tải về `framgia-ci` tool, cài đặt các gem Ruby cần thiết từ folder cache đã được restore trước đó. Sau đó dùng công cụ `framgia-ci` để chạy test cũng như gửi report.
+About the contain of the configuration file, there are 2 parts: `build` part and `cache` part. The role of `build` part is downloading the `framgia-ci` tool, install necessary Ruby gems from the cached folder. After that, `framgia-ci` is used to run the tests, as well as send the reports.
 
-Kết thúc là quá trình cache lại thư mục `.git` và `/drone/.bundle` để những bản build sau có thể sử dụng được.
+At the end, `.git` and `/drone/.bundle` are cached, so that the the later builds can use.
 
-- Framgia Drone có sẵn nhiều **plugins** riêng biệt (không phải là plugins có sẵn của Drone), để phục vụ cho việc auto deployment với nhiều tools khác nhau (như **capistrano**, **rocketeer**, **ansible** ...), cũng như để notify lên Chatwork. Danh sách các plugins này có thể xem tại Docker Hub của Framgia CI Team: https://hub.docker.com/r/fdplugins/
+- Framgia Drone has many special **plugins** (which are not officially provided by Drone) written by Framgia Members. They are used for auto deployment (with many different tools supported like **capistrano**, **rocketeer**, **ansible** ...), as well as Chatwork notification. All Drone Plugins can be found at Framgia CI Team's Docker Hub: https://hub.docker.com/r/fdplugins/
 
-- **Chú ý**:
-    - Bạn nên tạo Docker Image cho project của mình, với đầy đủ các công cụ cần thiết ở trên đó để quá trình build được diễn ra nhanh hơn (không phải cài đặt những công cụ, packages khác)
-    - Bạn nên sử dụng chức năng cache để việc cài đặt `bundle`, `npm`, `composer` diễn ra được nhanh hơn.
-    - Ở phiên bản hiện tại của Drone, một Pull Request chỉ có thể restore cache từ bản cache của defaul branch. Vấn đề này sẽ được khắc phục khi Framgia Drone được nâng cấp lên bản mới.
+- **Notices**:
+    - You should create your own Docker Image for your project, with all packages and softwares installed, so the build will become faster (during the build, you do not have to download and install other tools, packages ...)
+    - You should use the cache feature, to cache some folder like `bundle`, `npm`, `composer`, so the build will become faster
+    - At the current version of Framgia Drone, a Pull Request can only restore cache from the **default branch**. It can be fixed when Framgia CI Services are updated to newer version.
 
-- Bạn có thể tham khảo thêm về config ví dụ cho project PHP [ở đây](./php/), ví dụ cho project Ruby [ở đây](./ruby), hay ví dụ cho project Android [ở đây](./android).
+- You can refer the sample configurations for PHP project [here](./php/), for Ruby project [here](./ruby), for Android project [here](./android).
 
 ## Framgia CI Report Service
 - URL: http://ci-reports.framgia.vn/
-- Requirement: Bạn cần có repository được active bên Framgia Drone để có thể theo dõi được trạng thái của chúng ở bên Framgia CI Report
-- Hiện Framgia CI Report Service support 3 loại project cho Ruby, PHP và Android, với các loại test tool sau:
+- Requirement: You must have a activated repository in Framgia Drone, to be able to check it in Framgia CI Report.
+- Currently, Framgia CI Report Service supports 3 types of project: Ruby, PHP and Android, with various of tools supported:
     - Ruby: `bundle-audit`, `rspec` with code coverage, `brakeman`, `reek`, `rubocop`, `rails_best_practices`
     - PHP: `phpcpd` (PHP Copy/Paste Detector), `phpmd` (PHP Mess Detector), `pdepend` (PHP Depend), `phpmetrics`, `phpcs` (PHP CodeSniffer), `phpunit` with Code Coverage
     - Android: `android-lint`, `checkstyle`, `findbugs`, `pmd`)
-    - Ngoài ra còn support hiển thị Javascript & CSS (`eslint`, `scss-lint`) cho các project PHP và Ruby.
-- Framgia CI Report cũng có các tính năng về notification lên Chatwork hay qua Email. Bạn cần có quyền admin với GitHub Repository để có thể chỉnh sửa các setting này trên Framgia CI Report Service.
-- Để nhận thông báo về các bản build qua **Chatwork**, bạn có thể sử dụng Chatwork Bot của riêng mình, hoặc sử dụng bot mặc định mà Framgia CI cung cấp. Hãy add contact với [Framgia CI Bot](https://www.chatwork.com/framgia-ci-bot) rồi add nó vào box Chatwork mà bạn mong muốn nhận message, và Framgia CI Service sẽ thực hiện các công việc còn lại cho bạn.
+    - Javascript & CSS (`eslint`, `scss-lint`) for PHP, Ruby, Java project
+- Framgia CI Report also have Chatwork or Email notification feature. You must have the administration role in Github Repository to change these settings in Framgia CI Report Service.
+- To receive notifications in **Chatwork**, you can use your own Chatwork Bot, or use the default bot that Framgia CI provides. First, add contact with [Framgia CI Bot](https://www.chatwork.com/framgia-ci-bot), then add it to the Chatwork box where you want to receive messages. Framgia CI Services will take care of other tasks for you.
 
 ## Framgia CI CLI tool
 - URL: https://github.com/framgia/ci-report-tool/
-- Nếu bạn dùng Mac, bạn cần python 3.5 để cài đặt và sử dụng `framgia-ci` tool. Nếu bạn dùng Linux, bạn có thể cài thông qua `pip` giống Mac, hoặc là tải về file pre-compiled.
-- Bạn cần một file config riêng cho Framgia CI CLI, nó có tên là `.framgia-ci.yml`. File này có thể được sinh bằng câu lệnh `framgia-ci init {project_type}`. Ví dụ:
+- If you're using MacOS, you must have python 3.5 to install and use `framgia-ci` tool. If you're using Linux, you can install by using `pip` like Mac, or you can just download the pre-compiled file to use.
+- You have to create a separate configuration file for Framgia CI CLI. It is named `.framgia-ci.yml`. This file can be auto generated by using `framgia-ci init {project_type}` command. For example:
 ```
 framgia-ci init php
 framgia-ci init ruby
 framgia-ci init android
 ```
-- Các file reports được sinh ra bắt buộc phải để trong một thư mục có tên `.framgia-ci-reports` để bên Framgia CI Report Service có thể nhận dạng được.
+- The reports file which are generated during the build **must** be put inside a folder named `.framgia-ci-reports`, so that the Framgia CI Report Service can identify them.
 
 ## Framgia GitHub Comment service
-- Hệ thống Framgia GitHub Comment sẽ tự động được chạy sau khi Framgia CI Report Service hoàn thành việc copy các file reports từ Framgia Drone. Bạn hoàn toàn không cần thực hiện bất kỳ config nào cho việc này.
+- The Framgia GitHub Comment service will be run automatically after Framgia CI Report Service finishes copying reports file from Framgia Drone. You have nothing to do with this service.
